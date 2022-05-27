@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: false }))//important line
 // signup routes and login routes
 app.use('/api/user', require('../routes/auth'))
 app.use('/api/posts',require("../routes/post"))
-
+app.use('/api/anonymous/',require("../routes/Anonymouspost"))
 app.get("/",(req,res)=>{
 
 
