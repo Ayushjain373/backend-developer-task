@@ -62,7 +62,7 @@ router.get('/fetchPost', fetchuser, async (req, res) => {
 
 
 
-/// post a comments
+/// post a comments and :id is post id
 
 
 router.post('/comments/:id', fetchuser, async (req, res) => {
@@ -99,7 +99,7 @@ router.post('/comments/:id', fetchuser, async (req, res) => {
 })
 
 
-// delet a comment
+// delete a comment/ postid/commentid/
 
 router.delete('/commentdel/:id/:comment_id', fetchuser, async (req, res) => {
 
@@ -108,7 +108,7 @@ router.delete('/commentdel/:id/:comment_id', fetchuser, async (req, res) => {
     const post = await Post.findById(req.params.id);
 
 
-    const comment =  post.comments.find(comment => comment._id == req.params.comment_id)
+    const comment = post.comments.find(comment => comment._id == req.params.comment_id)
     console.log(comment)
 
     if (!comment) {
@@ -118,14 +118,13 @@ router.delete('/commentdel/:id/:comment_id', fetchuser, async (req, res) => {
       return res.status(401).send("Not allowed user not authenticate");
     }
 
-    post.comments = post.comments.filter(({comment }) =>comment._id !== req.params.comment_id)
+    post.comments = post.comments.filter(({ comment }) => comment._id !== req.params.comment_id)
     console.log(post.comments)
     const result = await post.save();
     return res.status(200).send("comment deleted")
-  }catch(err)
-  {
+  } catch (err) {
     console.log(err)
-      res.status(500).send("Internal server error")
+    res.status(500).send("Internal server error")
   }
 
 
@@ -133,9 +132,34 @@ router.delete('/commentdel/:id/:comment_id', fetchuser, async (req, res) => {
 
 })
 
+//get all the thought of any user providing a user id of User
+
+router.get('/getthought/:id',fetchuser, async (req, res) => {
+
+  try {
+    const result = await Post.find({ user: req.params.id })
+
+    if (!result) {
+      return res.status(404).send("User thought not found");
+    }
+
+    res.send(result);
+  } catch (error) {
+    console.log(error)
+
+    res.send(error);
+
+  }
 
 
-// delet a post
+
+
+
+
+
+})
+
+// delet a post  deletepost/postid
 
 router.delete("/deletePost/:id", fetchuser, async (req, res) => {
 
